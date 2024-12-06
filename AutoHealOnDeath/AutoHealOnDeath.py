@@ -2,24 +2,21 @@ import sys
 
 sys.path.append("../..")
 
-from Level import Unit, Tags
-from Consumables import HealPotSpell
+from Level import Unit
 
 print("[AutoHealOnDeath] mod loaded")
 
 
 def kill_w_autoheal_deco(kill):
     def kill_w_autoheal(self, damage_event=None, trigger_death_event=True):
-        healpot_item = next(
-            (item for item in self.items if item.name == "Healing Potion"), None
-        )
-        if healpot_item is not None:
-            self.cur_hp = 1
-            self.level.deal_damage(
-                self.x, self.y, -self.max_hp, Tags.Heal, HealPotSpell()
+        if self.name == "Player":
+            healpot_item = next(
+                (item for item in self.items if item.name == "Healing Potion"), None
             )
-            self.items.remove(healpot_item)
-            return
+            if (healpot_item is not None) and (healpot_item.quantity > 0):
+                self.cur_hp = 1
+                self.level.act_cast(self, healpot_item.spell, self.x, self.y)
+                return
         kill(self, damage_event, trigger_death_event)
 
     return kill_w_autoheal
