@@ -13,7 +13,7 @@ def kill_w_autoheal_deco(kill):
             healpot_item = next(
                 (item for item in self.items if item.name == "Healing Potion"), None
             )
-            if (healpot_item is not None) and (healpot_item.quantity > 0):
+            if (healpot_item is not None):
                 self.cur_hp = 1
                 self.level.act_cast(self, healpot_item.spell, self.x, self.y)
                 return
